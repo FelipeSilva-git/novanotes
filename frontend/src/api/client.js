@@ -1,17 +1,28 @@
 const BASE = '/api';
 
+function getToken() {
+  return localStorage.getItem('novanotes_token');
+}
+
 async function request(path, options = {}) {
-  const res = await fetch(`${BASE}${path}`, {
-    headers: { 'Content-Type': 'application/json', ...options.headers },
-    ...options,
-  });
+  const token = getToken();
+  const headers = { 'Content-Type': 'application/json', ...options.headers };
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+
+  const res = await fetch(`${BASE}${path}`, { ...options, headers });
+
+  if (res.status === 401) {
+    localStorage.removeItem('novanotes_token');
+    localStorage.removeItem('novanotes_user');
+    window.location.reload();
+    return;
+  }
 
   if (!res.ok) {
     const error = await res.json().catch(() => ({ error: res.statusText }));
     throw new Error(error.error || `Request failed: ${res.status}`);
   }
 
-  // For binary / non-JSON responses (export), return the response object directly
   const contentType = res.headers.get('content-type') || '';
   if (
     contentType.includes('application/xml') ||
@@ -22,6 +33,25 @@ async function request(path, options = {}) {
   }
 
   return res.json();
+}
+
+// ── Auth ────────────────────────────────────────────────────────
+export function login(username, password) {
+  return request('/auth/login', {
+    method: 'POST',
+    body: JSON.stringify({ username, password }),
+  });
+}
+
+export function register(username, email, password) {
+  return request('/auth/register', {
+    method: 'POST',
+    body: JSON.stringify({ username, email, password }),
+  });
+}
+
+export function getMe() {
+  return request('/auth/me');
 }
 
 // ── Notes ──────────────────────────────────────────────────────
@@ -39,17 +69,11 @@ export function getNote(id) {
 }
 
 export function createNote(data) {
-  return request('/notes', {
-    method: 'POST',
-    body: JSON.stringify(data),
-  });
+  return request('/notes', { method: 'POST', body: JSON.stringify(data) });
 }
 
 export function updateNote(id, data) {
-  return request(`/notes/${id}`, {
-    method: 'PUT',
-    body: JSON.stringify(data),
-  });
+  return request(`/notes/${id}`, { method: 'PUT', body: JSON.stringify(data) });
 }
 
 export function deleteNote(id) {
@@ -66,17 +90,11 @@ export function getFolders() {
 }
 
 export function createFolder(data) {
-  return request('/folders', {
-    method: 'POST',
-    body: JSON.stringify(data),
-  });
+  return request('/folders', { method: 'POST', body: JSON.stringify(data) });
 }
 
 export function updateFolder(id, data) {
-  return request(`/folders/${id}`, {
-    method: 'PUT',
-    body: JSON.stringify(data),
-  });
+  return request(`/folders/${id}`, { method: 'PUT', body: JSON.stringify(data) });
 }
 
 export function deleteFolder(id) {
@@ -89,17 +107,11 @@ export function getTags() {
 }
 
 export function createTag(data) {
-  return request('/tags', {
-    method: 'POST',
-    body: JSON.stringify(data),
-  });
+  return request('/tags', { method: 'POST', body: JSON.stringify(data) });
 }
 
 export function updateTag(id, data) {
-  return request(`/tags/${id}`, {
-    method: 'PUT',
-    body: JSON.stringify(data),
-  });
+  return request(`/tags/${id}`, { method: 'PUT', body: JSON.stringify(data) });
 }
 
 export function deleteTag(id) {

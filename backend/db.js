@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import Database from 'better-sqlite3';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
@@ -7,14 +8,24 @@ const __dirname = dirname(__filename);
 
 const db = new Database(join(__dirname, 'novanotes.db'));
 
-// Enable WAL mode for better performance
 db.pragma('journal_mode = WAL');
 db.pragma('foreign_keys = ON');
 
-// Create tables
 db.exec(`
+  CREATE TABLE IF NOT EXISTS users (
+    id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+    username            TEXT NOT NULL UNIQUE,
+    email               TEXT NOT NULL UNIQUE,
+    password_hash       TEXT NOT NULL,
+    verified            INTEGER NOT NULL DEFAULT 0,
+    verification_code   TEXT,
+    verification_expires TEXT,
+    created_at          TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+
   CREATE TABLE IF NOT EXISTS folders (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     name TEXT NOT NULL,
     color TEXT NOT NULL DEFAULT '#6c63ff',
     created_at TEXT NOT NULL DEFAULT (datetime('now'))
@@ -22,13 +33,16 @@ db.exec(`
 
   CREATE TABLE IF NOT EXISTS tags (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL UNIQUE,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
     color TEXT NOT NULL DEFAULT '#00d4ff',
-    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(user_id, name)
   );
 
   CREATE TABLE IF NOT EXISTS notes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     title TEXT NOT NULL DEFAULT 'Untitled Note',
     content TEXT NOT NULL DEFAULT '',
     folder_id INTEGER REFERENCES folders(id) ON DELETE SET NULL,
@@ -43,42 +57,43 @@ db.exec(`
   );
 `);
 
-// Seed data — only if tables are empty
-const folderCount = db.prepare('SELECT COUNT(*) as cnt FROM folders').get();
-if (folderCount.cnt === 0) {
-  const insertFolder = db.prepare(
-    'INSERT INTO folders (name, color) VALUES (?, ?)'
-  );
-  const insertTag = db.prepare('INSERT INTO tags (name, color) VALUES (?, ?)');
+export default db;
+
+// Helper: seed a fresh workspace for a new user
+export function seedUserWorkspace(userId) {
+  const insertFolder = db.prepare('INSERT INTO folders (user_id, name, color) VALUES (?, ?, ?)');
+  const insertTag = db.prepare('INSERT INTO tags (user_id, name, color) VALUES (?, ?, ?)');
   const insertNote = db.prepare(
-    'INSERT INTO notes (title, content, folder_id) VALUES (?, ?, ?)'
+    'INSERT INTO notes (user_id, title, content, folder_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)'
   );
-  const insertNoteTag = db.prepare(
-    'INSERT INTO note_tags (note_id, tag_id) VALUES (?, ?)'
-  );
+  const insertNoteTag = db.prepare('INSERT INTO note_tags (note_id, tag_id) VALUES (?, ?)');
 
-  const personalFolder = insertFolder.run('Personal', '#6c63ff');
-  const workFolder = insertFolder.run('Work', '#00d4ff');
+  const now = new Date().toISOString();
 
-  const importantTag = insertTag.run('important', '#ff6b6b');
-  const todoTag = insertTag.run('todo', '#ffd93d');
-  const ideaTag = insertTag.run('idea', '#6bcb77');
+  const personalFolder = insertFolder.run(userId, 'Personal', '#6c63ff');
+  const workFolder = insertFolder.run(userId, 'Work', '#00d4ff');
+
+  const importantTag = insertTag.run(userId, 'important', '#ff6b6b');
+  const todoTag = insertTag.run(userId, 'todo', '#ffd93d');
+  const ideaTag = insertTag.run(userId, 'idea', '#6bcb77');
 
   const note1 = insertNote.run(
-    'Welcome to NovaNotes',
-    `<h1>Welcome to NovaNotes</h1><p>NovaNotes is your futuristic, distraction-free note-taking app. Here's what you can do:</p><ul><li><p>Organize notes into <strong>folders</strong></p></li><li><p>Tag notes with <strong>custom tags</strong></p></li><li><p>Write rich content with the <strong>TipTap editor</strong></p></li><li><p>Export notes as <strong>HTML or XML</strong></p></li></ul><p>Start by creating a new note with the <strong>New Note</strong> button or pressing <code>Ctrl+N</code>.</p>`,
-    personalFolder.lastInsertRowid
+    userId,
+    'Bem-vindo ao NovaNotes',
+    `<h1>Bem-vindo ao NovaNotes</h1><p>Este é o seu workspace pessoal. Aqui você pode:</p><ul><li><p>Organizar notas em <strong>pastas</strong></p></li><li><p>Marcar notas com <strong>tags personalizadas</strong></p></li><li><p>Escrever conteúdo rico com o editor <strong>TipTap</strong></p></li><li><p>Exportar notas como <strong>HTML ou XML</strong></p></li></ul><p>Crie uma nova nota com o botão <strong>Nova Nota</strong> ou pressionando <code>Ctrl+N</code>.</p>`,
+    personalFolder.lastInsertRowid,
+    now, now
   );
 
   const note2 = insertNote.run(
-    'Project Ideas',
-    `<h2>Ideas to Explore</h2><ul data-type="taskList"><li data-checked="false" data-type="taskItem"><label><input type="checkbox"><span></span></label><div><p>Build a CLI tool for NovaNotes sync</p></div></li><li data-checked="false" data-type="taskItem"><label><input type="checkbox"><span></span></label><div><p>Add end-to-end encryption for notes</p></div></li><li data-checked="true" data-type="taskItem"><label><input type="checkbox" checked><span></span></label><div><p>Implement PWA offline support</p></div></li></ul><blockquote><p>The best ideas are the ones you actually write down.</p></blockquote>`,
-    workFolder.lastInsertRowid
+    userId,
+    'Ideias de Projeto',
+    `<h2>Ideias para Explorar</h2><ul data-type="taskList"><li data-checked="false" data-type="taskItem"><label><input type="checkbox"><span></span></label><div><p>Criar uma CLI para sincronizar notas</p></div></li><li data-checked="false" data-type="taskItem"><label><input type="checkbox"><span></span></label><div><p>Adicionar criptografia ponta a ponta</p></div></li><li data-checked="true" data-type="taskItem"><label><input type="checkbox" checked><span></span></label><div><p>Implementar suporte offline com PWA</p></div></li></ul><blockquote><p>As melhores ideias são as que você realmente anota.</p></blockquote>`,
+    workFolder.lastInsertRowid,
+    now, now
   );
 
   insertNoteTag.run(note1.lastInsertRowid, importantTag.lastInsertRowid);
   insertNoteTag.run(note2.lastInsertRowid, todoTag.lastInsertRowid);
   insertNoteTag.run(note2.lastInsertRowid, ideaTag.lastInsertRowid);
 }
-
-export default db;

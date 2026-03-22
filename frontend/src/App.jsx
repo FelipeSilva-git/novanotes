@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import useAppStore from './store/appStore.js';
 import { useNotes } from './hooks/useNotes.js';
 import { useFolders } from './hooks/useFolders.js';
@@ -8,8 +8,12 @@ import { createNote } from './api/client.js';
 import Sidebar from './components/Sidebar.jsx';
 import NoteList from './components/NoteList.jsx';
 import NoteEditor from './components/NoteEditor.jsx';
+import SettingsModal from './components/SettingsModal.jsx';
+import AuthPage from './components/AuthPage.jsx';
 
 export default function App() {
+  const [showSettings, setShowSettings] = useState(false);
+  const user = useAppStore((s) => s.user);
   const selectNote = useAppStore((s) => s.selectNote);
   const addNote = useAppStore((s) => s.addNote);
   const removeNote = useAppStore((s) => s.removeNote);
@@ -107,6 +111,8 @@ export default function App() {
     [deleteTag, refetchNotes]
   );
 
+  if (!user) return <AuthPage />;
+
   return (
     <div
       style={{
@@ -122,6 +128,7 @@ export default function App() {
         onDeleteFolder={handleDeleteFolder}
         onCreateTag={handleCreateTag}
         onDeleteTag={handleDeleteTag}
+        onOpenSettings={() => setShowSettings(true)}
       />
 
       <NoteList
@@ -135,6 +142,8 @@ export default function App() {
         onCreateTag={handleCreateTag}
         allTags={tags}
       />
+
+      {showSettings && <SettingsModal onClose={() => setShowSettings(false)} />}
     </div>
   );
 }

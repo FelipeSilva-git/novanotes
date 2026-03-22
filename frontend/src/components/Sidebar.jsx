@@ -11,6 +11,8 @@ import {
   Trash2,
   Check,
   X,
+  LogOut,
+  User,
 } from 'lucide-react';
 import useAppStore from '../store/appStore.js';
 
@@ -140,7 +142,9 @@ function InlineCreateForm({ placeholder, onConfirm, onCancel, colorOptions = TAG
   );
 }
 
-export default function Sidebar({ onCreateFolder, onDeleteFolder, onCreateTag, onDeleteTag }) {
+export default function Sidebar({ onCreateFolder, onDeleteFolder, onCreateTag, onDeleteTag, onOpenSettings }) {
+  const user = useAppStore((s) => s.user);
+  const logout = useAppStore((s) => s.logout);
   const selectedNoteId = useAppStore((s) => s.selectedNoteId);
   const selectedFolderId = useAppStore((s) => s.selectedFolderId);
   const selectedTagId = useAppStore((s) => s.selectedTagId);
@@ -554,35 +558,116 @@ export default function Sidebar({ onCreateFolder, onDeleteFolder, onCreateTag, o
           </div>
         </nav>
 
-        {/* Bottom settings */}
+        {/* Bottom: user + actions */}
         <div
           style={{
-            padding: '12px 16px',
+            padding: '12px 14px',
             borderTop: '1px solid var(--border)',
             display: 'flex',
-            alignItems: 'center',
-            gap: 8,
+            flexDirection: 'column',
+            gap: 6,
           }}
         >
-          <button
-            title="Settings (coming soon)"
+          {/* User info */}
+          <div
             style={{
-              background: 'none',
-              color: 'var(--text-secondary)',
               display: 'flex',
               alignItems: 'center',
               gap: 8,
-              borderRadius: 8,
               padding: '6px 8px',
-              fontSize: 13,
-              transition: 'color 0.15s',
+              borderRadius: 8,
+              background: 'rgba(108,99,255,0.08)',
+              border: '1px solid rgba(108,99,255,0.15)',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--text-primary)')}
-            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-secondary)')}
           >
-            <Settings size={15} />
-            Settings
-          </button>
+            <div
+              style={{
+                width: 28,
+                height: 28,
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, #6c63ff, #00d4ff)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+              }}
+            >
+              <User size={13} color="#fff" />
+            </div>
+            <span
+              style={{
+                fontSize: 13,
+                fontWeight: 600,
+                color: 'var(--text-primary)',
+                flex: 1,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {user?.username}
+            </span>
+          </div>
+
+          {/* Settings + Logout row */}
+          <div style={{ display: 'flex', gap: 4 }}>
+            <button
+              onClick={onOpenSettings}
+              title="Configurações"
+              style={{
+                flex: 1,
+                background: 'none',
+                color: 'var(--text-secondary)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 6,
+                borderRadius: 8,
+                padding: '7px 8px',
+                fontSize: 12,
+                transition: 'all 0.15s',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = 'var(--text-primary)';
+                e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = 'var(--text-secondary)';
+                e.currentTarget.style.background = 'none';
+              }}
+            >
+              <Settings size={14} />
+              Config
+            </button>
+            <button
+              onClick={() => { if (window.confirm('Sair da sua conta?')) logout(); }}
+              title="Sair"
+              style={{
+                flex: 1,
+                background: 'none',
+                color: 'var(--text-secondary)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 6,
+                borderRadius: 8,
+                padding: '7px 8px',
+                fontSize: 12,
+                transition: 'all 0.15s',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#ff6b6b';
+                e.currentTarget.style.background = 'rgba(255,107,107,0.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = 'var(--text-secondary)';
+                e.currentTarget.style.background = 'none';
+              }}
+            >
+              <LogOut size={14} />
+              Sair
+            </button>
+          </div>
         </div>
       </div>
     </aside>
