@@ -97,7 +97,7 @@ export default function NoteEditor({ onNoteUpdated, onNoteDeleted, onCreateTag, 
       Underline,
       Link.configure({ openOnClick: false, autolink: true }),
       Image,
-      Placeholder.configure({ placeholder: 'Start writing your note...' }),
+      Placeholder.configure({ placeholder: 'Comece a escrever sua nota...' }),
       Highlight.configure({ multicolor: true }),
       TextStyle,
       Color,
@@ -245,10 +245,10 @@ export default function NoteEditor({ onNoteUpdated, onNoteDeleted, onCreateTag, 
         </div>
         <div style={{ textAlign: 'center' }}>
           <p style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 6 }}>
-            No note selected
+            Nenhuma nota selecionada
           </p>
           <p style={{ fontSize: 13 }}>
-            Select a note from the list or press{' '}
+            Selecione uma nota da lista ou pressione{' '}
             <kbd
               style={{
                 background: 'rgba(108,99,255,0.15)',
@@ -261,7 +261,7 @@ export default function NoteEditor({ onNoteUpdated, onNoteDeleted, onCreateTag, 
             >
               Ctrl+N
             </kbd>{' '}
-            to create a new one
+            para criar uma nova
           </p>
         </div>
       </div>
@@ -291,7 +291,7 @@ export default function NoteEditor({ onNoteUpdated, onNoteDeleted, onCreateTag, 
             animation: 'spin 0.8s linear infinite',
           }}
         />
-        Loading note...
+        Carregando nota...
       </div>
     );
   }
@@ -323,7 +323,7 @@ export default function NoteEditor({ onNoteUpdated, onNoteDeleted, onCreateTag, 
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="Note title..."
+          placeholder="Título da nota..."
           style={{
             width: '100%',
             fontSize: 22,
@@ -361,7 +361,7 @@ export default function NoteEditor({ onNoteUpdated, onNoteDeleted, onCreateTag, 
               onFocus={(e) => (e.target.style.borderColor = 'var(--border-hover)')}
               onBlur={(e) => (e.target.style.borderColor = 'var(--border)')}
             >
-              <option value="">No folder</option>
+              <option value="">Sem pasta</option>
               {folders.map((f) => (
                 <option key={f.id} value={f.id}>
                   {f.name}
@@ -403,28 +403,28 @@ export default function NoteEditor({ onNoteUpdated, onNoteDeleted, onCreateTag, 
         <ToolbarButton
           onClick={() => editor?.chain().focus().toggleBold().run()}
           isActive={editor?.isActive('bold')}
-          title="Bold (Ctrl+B)"
+          title="Negrito (Ctrl+B)"
         >
           <Bold size={14} />
         </ToolbarButton>
         <ToolbarButton
           onClick={() => editor?.chain().focus().toggleItalic().run()}
           isActive={editor?.isActive('italic')}
-          title="Italic (Ctrl+I)"
+          title="Itálico (Ctrl+I)"
         >
           <Italic size={14} />
         </ToolbarButton>
         <ToolbarButton
           onClick={() => editor?.chain().focus().toggleUnderline().run()}
           isActive={editor?.isActive('underline')}
-          title="Underline (Ctrl+U)"
+          title="Sublinhado (Ctrl+U)"
         >
           <UnderlineIcon size={14} />
         </ToolbarButton>
         <ToolbarButton
           onClick={() => editor?.chain().focus().toggleStrike().run()}
           isActive={editor?.isActive('strike')}
-          title="Strikethrough"
+          title="Tachado"
         >
           <Strikethrough size={14} />
         </ToolbarButton>
@@ -434,21 +434,21 @@ export default function NoteEditor({ onNoteUpdated, onNoteDeleted, onCreateTag, 
         <ToolbarButton
           onClick={() => editor?.chain().focus().toggleHeading({ level: 1 }).run()}
           isActive={editor?.isActive('heading', { level: 1 })}
-          title="Heading 1"
+          title="Título 1"
         >
           <Heading1 size={14} />
         </ToolbarButton>
         <ToolbarButton
           onClick={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()}
           isActive={editor?.isActive('heading', { level: 2 })}
-          title="Heading 2"
+          title="Título 2"
         >
           <Heading2 size={14} />
         </ToolbarButton>
         <ToolbarButton
           onClick={() => editor?.chain().focus().toggleHeading({ level: 3 }).run()}
           isActive={editor?.isActive('heading', { level: 3 })}
-          title="Heading 3"
+          title="Título 3"
         >
           <Heading3 size={14} />
         </ToolbarButton>
@@ -458,21 +458,21 @@ export default function NoteEditor({ onNoteUpdated, onNoteDeleted, onCreateTag, 
         <ToolbarButton
           onClick={() => editor?.chain().focus().toggleBulletList().run()}
           isActive={editor?.isActive('bulletList')}
-          title="Bullet list"
+          title="Lista com marcadores"
         >
           <List size={14} />
         </ToolbarButton>
         <ToolbarButton
           onClick={() => editor?.chain().focus().toggleOrderedList().run()}
           isActive={editor?.isActive('orderedList')}
-          title="Ordered list"
+          title="Lista numerada"
         >
           <ListOrdered size={14} />
         </ToolbarButton>
         <ToolbarButton
           onClick={() => editor?.chain().focus().toggleTaskList().run()}
           isActive={editor?.isActive('taskList')}
-          title="Task list"
+          title="Lista de tarefas"
         >
           <CheckSquare size={14} />
         </ToolbarButton>
@@ -482,14 +482,14 @@ export default function NoteEditor({ onNoteUpdated, onNoteDeleted, onCreateTag, 
         <ToolbarButton
           onClick={() => editor?.chain().focus().toggleBlockquote().run()}
           isActive={editor?.isActive('blockquote')}
-          title="Blockquote"
+          title="Citação"
         >
           <Quote size={14} />
         </ToolbarButton>
         <ToolbarButton
           onClick={() => editor?.chain().focus().toggleCodeBlock().run()}
           isActive={editor?.isActive('codeBlock')}
-          title="Code block"
+          title="Bloco de código"
         >
           <Code size={14} />
         </ToolbarButton>
@@ -510,14 +510,14 @@ export default function NoteEditor({ onNoteUpdated, onNoteDeleted, onCreateTag, 
         <ToolbarButton
           onClick={() => editor?.chain().focus().toggleHighlight({ color: '#ffd93d' }).run()}
           isActive={editor?.isActive('highlight')}
-          title="Highlight"
+          title="Destaque"
         >
           <Highlighter size={14} />
         </ToolbarButton>
 
         {/* Color picker */}
         <label
-          title="Text color"
+          title="Cor do texto"
           className="toolbar-btn"
           style={{ position: 'relative', cursor: 'pointer', overflow: 'hidden' }}
         >
@@ -542,14 +542,14 @@ export default function NoteEditor({ onNoteUpdated, onNoteDeleted, onCreateTag, 
         <ToolbarButton
           onClick={() => editor?.chain().focus().undo().run()}
           disabled={!editor?.can().undo()}
-          title="Undo (Ctrl+Z)"
+          title="Desfazer (Ctrl+Z)"
         >
           <Undo size={14} />
         </ToolbarButton>
         <ToolbarButton
           onClick={() => editor?.chain().focus().redo().run()}
           disabled={!editor?.can().redo()}
-          title="Redo (Ctrl+Y)"
+          title="Refazer (Ctrl+Y)"
         >
           <Redo size={14} />
         </ToolbarButton>
@@ -562,7 +562,7 @@ export default function NoteEditor({ onNoteUpdated, onNoteDeleted, onCreateTag, 
           <button
             onClick={() => { clearTimeout(autoSaveTimer.current); doSave(); }}
             disabled={saving}
-            title="Save (Ctrl+S)"
+            title="Salvar (Ctrl+S)"
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -579,13 +579,13 @@ export default function NoteEditor({ onNoteUpdated, onNoteDeleted, onCreateTag, 
             }}
           >
             <Save size={13} />
-            {saving ? 'Saving...' : 'Save'}
+            {saving ? 'Salvando...' : 'Salvar'}
           </button>
 
           <div style={{ position: 'relative' }}>
             <button
               onClick={() => setShowExport((v) => !v)}
-              title="Export"
+              title="Exportar"
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -601,7 +601,7 @@ export default function NoteEditor({ onNoteUpdated, onNoteDeleted, onCreateTag, 
               }}
             >
               <Download size={13} />
-              Export
+              Exportar
             </button>
             {showExport && note && (
               <ExportMenu note={note} onClose={() => setShowExport(false)} />
@@ -610,7 +610,7 @@ export default function NoteEditor({ onNoteUpdated, onNoteDeleted, onCreateTag, 
 
           <button
             onClick={() => setShowDeleteConfirm(true)}
-            title="Delete note"
+            title="Excluir nota"
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -649,7 +649,7 @@ export default function NoteEditor({ onNoteUpdated, onNoteDeleted, onCreateTag, 
           color: 'var(--text-secondary)',
         }}
       >
-        <span>{words} word{words !== 1 ? 's' : ''}</span>
+        <span>{words} palavra{words !== 1 ? 's' : ''}</span>
         <span
           style={{
             color:
@@ -663,14 +663,14 @@ export default function NoteEditor({ onNoteUpdated, onNoteDeleted, onCreateTag, 
           }}
         >
           {saveStatus === 'saved'
-            ? 'Saved'
+            ? 'Salvo'
             : saveStatus === 'saving'
-            ? 'Saving...'
-            : 'All changes saved'}
+            ? 'Salvando...'
+            : 'Todas as alterações salvas'}
         </span>
         <span>
           {note?.updated_at
-            ? `Last edited ${new Date(note.updated_at).toLocaleString()}`
+            ? `Última edição ${new Date(note.updated_at).toLocaleString('pt-BR')}`
             : ''}
         </span>
       </div>
@@ -701,7 +701,7 @@ export default function NoteEditor({ onNoteUpdated, onNoteDeleted, onCreateTag, 
             }}
           >
             <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 14, color: 'var(--text-primary)' }}>
-              Insert Link
+              Inserir Link
             </h3>
             <input
               autoFocus
@@ -733,7 +733,7 @@ export default function NoteEditor({ onNoteUpdated, onNoteDeleted, onCreateTag, 
                   border: '1px solid var(--border)',
                 }}
               >
-                Cancel
+                Cancelar
               </button>
               <button
                 onClick={handleSetLink}
@@ -747,7 +747,7 @@ export default function NoteEditor({ onNoteUpdated, onNoteDeleted, onCreateTag, 
                   fontWeight: 600,
                 }}
               >
-                {linkUrl ? 'Apply' : 'Remove'}
+                {linkUrl ? 'Aplicar' : 'Remover'}
               </button>
             </div>
           </div>
@@ -795,10 +795,10 @@ export default function NoteEditor({ onNoteUpdated, onNoteDeleted, onCreateTag, 
               <Trash2 size={22} color="var(--danger)" />
             </div>
             <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8 }}>
-              Delete note?
+              Excluir nota?
             </h3>
             <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 20 }}>
-              "{note?.title || 'Untitled'}" will be permanently deleted. This cannot be undone.
+              "{note?.title || 'Sem título'}" será excluída permanentemente. Esta ação não pode ser desfeita.
             </p>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
               <button
@@ -813,7 +813,7 @@ export default function NoteEditor({ onNoteUpdated, onNoteDeleted, onCreateTag, 
                   fontWeight: 500,
                 }}
               >
-                Cancel
+                Cancelar
               </button>
               <button
                 onClick={handleDelete}
@@ -828,7 +828,7 @@ export default function NoteEditor({ onNoteUpdated, onNoteDeleted, onCreateTag, 
                   boxShadow: '0 0 12px rgba(255,77,109,0.2)',
                 }}
               >
-                Delete
+                Excluir
               </button>
             </div>
           </div>

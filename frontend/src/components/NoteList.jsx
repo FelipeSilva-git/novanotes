@@ -16,7 +16,7 @@ function formatDate(dateStr) {
   if (diffDays === 0) {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   } else if (diffDays === 1) {
-    return 'Yesterday';
+    return 'Ontem';
   } else if (diffDays < 7) {
     return date.toLocaleDateString([], { weekday: 'short' });
   } else {
@@ -35,15 +35,15 @@ export default function NoteList({ onCreateNote, loading }) {
   const tags = useAppStore((s) => s.tags);
 
   // Determine panel title
-  let panelTitle = 'All Notes';
+  let panelTitle = 'Todas as Notas';
   if (selectedFolderId) {
     const folder = folders.find((f) => f.id === selectedFolderId);
-    panelTitle = folder ? folder.name : 'Folder';
+    panelTitle = folder ? folder.name : 'Pasta';
   } else if (selectedTagId) {
     const tag = tags.find((t) => t.id === selectedTagId);
     panelTitle = tag ? `#${tag.name}` : 'Tag';
   } else if (searchQuery) {
-    panelTitle = `Results for "${searchQuery}"`;
+    panelTitle = `Resultados para "${searchQuery}"`;
   }
 
   return (
@@ -85,12 +85,12 @@ export default function NoteList({ onCreateNote, loading }) {
             {panelTitle}
           </h2>
           <p style={{ fontSize: 11, color: 'var(--text-secondary)', marginTop: 1 }}>
-            {loading ? 'Loading...' : `${notes.length} note${notes.length !== 1 ? 's' : ''}`}
+            {loading ? 'Carregando...' : `${notes.length} nota${notes.length !== 1 ? 's' : ''}`}
           </p>
         </div>
         <button
           onClick={onCreateNote}
-          title="New Note (Ctrl+N)"
+          title="Nova Nota (Ctrl+N)"
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -114,7 +114,7 @@ export default function NoteList({ onCreateNote, loading }) {
           }}
         >
           <Plus size={14} />
-          New
+          Nova
         </button>
       </div>
 
@@ -142,7 +142,7 @@ export default function NoteList({ onCreateNote, loading }) {
                 animation: 'spin 0.8s linear infinite',
               }}
             />
-            Loading notes...
+            Carregando notas...
           </div>
         )}
 
@@ -176,12 +176,12 @@ export default function NoteList({ onCreateNote, loading }) {
             </div>
             <div>
               <p style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 4 }}>
-                No notes here
+                Nenhuma nota aqui
               </p>
               <p style={{ fontSize: 12 }}>
                 {searchQuery
-                  ? 'Try a different search term'
-                  : 'Click "New" to create your first note'}
+                  ? 'Tente um termo de busca diferente'
+                  : 'Clique em "Nova" para criar sua primeira nota'}
               </p>
             </div>
           </div>
@@ -238,7 +238,7 @@ export default function NoteList({ onCreateNote, loading }) {
                     paddingRight: 8,
                   }}
                 >
-                  {note.title || 'Untitled Note'}
+                  {note.title || 'Nota sem título'}
                 </span>
                 <span style={{ fontSize: 10, color: 'var(--text-secondary)', flexShrink: 0 }}>
                   {formatDate(note.updated_at)}

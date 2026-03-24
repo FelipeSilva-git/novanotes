@@ -135,7 +135,7 @@ export default function TagManager({ selectedTags = [], allTags = [], onChange, 
           onChange={(e) => { setInputValue(e.target.value); setIsOpen(true); }}
           onFocus={() => setIsOpen(true)}
           onKeyDown={handleKeyDown}
-          placeholder={selectedTags.length === 0 ? 'Add tags...' : ''}
+          placeholder={selectedTags.length === 0 ? 'Adicionar tags...' : ''}
           style={{
             border: 'none',
             background: 'none',
@@ -197,7 +197,7 @@ export default function TagManager({ selectedTags = [], allTags = [], onChange, 
               />
               {tag.name}
               <span style={{ fontSize: 10, color: 'var(--text-secondary)', marginLeft: 'auto' }}>
-                {tag.note_count} notes
+                {tag.note_count} nota{tag.note_count !== 1 ? 's' : ''}
               </span>
             </button>
           ))}
@@ -222,7 +222,7 @@ export default function TagManager({ selectedTags = [], allTags = [], onChange, 
               onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(108,99,255,0.06)')}
             >
               <Plus size={14} />
-              Create tag "{inputValue.trim()}"
+              Criar tag "{inputValue.trim()}"
             </button>
           )}
         </div>

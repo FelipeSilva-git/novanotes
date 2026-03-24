@@ -69,7 +69,7 @@ export default function ExportMenu({ note, onClose }) {
         }}
       >
         <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-          Export Note
+          Exportar Nota
         </span>
         <button
           onClick={onClose}
@@ -83,22 +83,22 @@ export default function ExportMenu({ note, onClose }) {
       <div style={{ padding: '6px' }}>
         <ExportOption
           icon={<Code size={15} />}
-          label="Export as XML"
-          description="Structured metadata + content"
+          label="Exportar como XML"
+          description="Metadados estruturados + conteúdo"
           onClick={() => downloadFile('xml')}
           color="var(--accent-secondary)"
         />
         <ExportOption
           icon={<FileText size={15} />}
-          label="Export as HTML"
-          description="Styled standalone webpage"
+          label="Exportar como HTML"
+          description="Página web estilizada e independente"
           onClick={() => downloadFile('html')}
           color="var(--accent-primary)"
         />
         <ExportOption
           icon={<Copy size={15} />}
-          label="Copy as HTML"
-          description="Copy raw HTML to clipboard"
+          label="Copiar como HTML"
+          description="Copiar HTML bruto para a área de transferência"
           onClick={copyAsHtml}
           color="#ffd93d"
         />

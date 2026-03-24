@@ -104,7 +104,7 @@ export default function AuthPage() {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="Username"
+              placeholder="Nome de usuário"
               autoComplete="username"
               required
               style={{ flex: 1, fontSize: 13, color: 'var(--text-primary)', background: 'none' }}

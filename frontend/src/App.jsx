@@ -11,9 +11,8 @@ import NoteEditor from './components/NoteEditor.jsx';
 import SettingsModal from './components/SettingsModal.jsx';
 import AuthPage from './components/AuthPage.jsx';
 
-export default function App() {
+function AuthenticatedApp() {
   const [showSettings, setShowSettings] = useState(false);
-  const user = useAppStore((s) => s.user);
   const selectNote = useAppStore((s) => s.selectNote);
   const addNote = useAppStore((s) => s.addNote);
   const removeNote = useAppStore((s) => s.removeNote);
@@ -48,7 +47,7 @@ export default function App() {
   const handleCreateNote = useCallback(async () => {
     try {
       const note = await createNote({
-        title: 'Untitled Note',
+        title: 'Nota sem título',
         content: '',
         folder_id: selectedFolderId || null,
         tag_ids: [],
@@ -86,7 +85,7 @@ export default function App() {
 
   const handleDeleteFolder = useCallback(
     async (id) => {
-      if (!window.confirm('Delete this folder? Notes inside will be moved to "No folder".')) return;
+      if (!window.confirm('Excluir esta pasta? As notas dentro dela ficarão sem pasta.')) return;
       await deleteFolder(id);
       refetchNotes();
     },
@@ -104,14 +103,12 @@ export default function App() {
 
   const handleDeleteTag = useCallback(
     async (id) => {
-      if (!window.confirm('Delete this tag? It will be removed from all notes.')) return;
+      if (!window.confirm('Excluir esta tag? Ela será removida de todas as notas.')) return;
       await deleteTag(id);
       refetchNotes();
     },
     [deleteTag, refetchNotes]
   );
-
-  if (!user) return <AuthPage />;
 
   return (
     <div
@@ -146,4 +143,10 @@ export default function App() {
       {showSettings && <SettingsModal onClose={() => setShowSettings(false)} />}
     </div>
   );
+}
+
+export default function App() {
+  const user = useAppStore((s) => s.user);
+  if (!user) return <AuthPage />;
+  return <AuthenticatedApp />;
 }

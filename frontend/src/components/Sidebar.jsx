@@ -267,7 +267,7 @@ export default function Sidebar({ onCreateFolder, onDeleteFolder, onCreateTag, o
             <Search size={14} color="var(--text-secondary)" />
             <input
               type="text"
-              placeholder="Search notes..."
+              placeholder="Buscar notas..."
               value={searchQuery}
               onChange={(e) => setSearch(e.target.value)}
               style={{
@@ -315,7 +315,7 @@ export default function Sidebar({ onCreateFolder, onDeleteFolder, onCreateTag, o
             }}
           >
             <FileText size={15} />
-            All Notes
+            Todas as Notas
             <span
               style={{
                 marginLeft: 'auto',
@@ -358,11 +358,11 @@ export default function Sidebar({ onCreateFolder, onDeleteFolder, onCreateTag, o
                 }}
               >
                 {foldersOpen ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
-                Folders
+                Pastas
               </button>
               <button
                 onClick={() => setShowCreateFolder(true)}
-                title="New folder"
+                title="Nova pasta"
                 style={{
                   background: 'none',
                   color: 'var(--text-secondary)',
@@ -382,7 +382,7 @@ export default function Sidebar({ onCreateFolder, onDeleteFolder, onCreateTag, o
               <div style={{ paddingLeft: 4 }}>
                 {showCreateFolder && (
                   <InlineCreateForm
-                    placeholder="Folder name..."
+                    placeholder="Nome da pasta..."
                     onConfirm={handleCreateFolder}
                     onCancel={() => setShowCreateFolder(false)}
                   />
@@ -437,7 +437,7 @@ export default function Sidebar({ onCreateFolder, onDeleteFolder, onCreateTag, o
                     </button>
                     <button
                       onClick={() => onDeleteFolder(folder.id)}
-                      title="Delete folder"
+                      title="Excluir pasta"
                       style={{
                         background: 'none',
                         color: 'transparent',
@@ -455,7 +455,7 @@ export default function Sidebar({ onCreateFolder, onDeleteFolder, onCreateTag, o
                 ))}
                 {folders.length === 0 && !showCreateFolder && (
                   <p style={{ fontSize: 12, color: 'var(--text-secondary)', padding: '4px 10px', fontStyle: 'italic' }}>
-                    No folders yet
+                    Nenhuma pasta ainda
                   </p>
                 )}
               </div>
@@ -493,7 +493,7 @@ export default function Sidebar({ onCreateFolder, onDeleteFolder, onCreateTag, o
               </button>
               <button
                 onClick={() => setShowCreateTag(true)}
-                title="New tag"
+                title="Nova tag"
                 style={{
                   background: 'none',
                   color: 'var(--text-secondary)',
@@ -513,7 +513,7 @@ export default function Sidebar({ onCreateFolder, onDeleteFolder, onCreateTag, o
               <div style={{ paddingLeft: 4 }}>
                 {showCreateTag && (
                   <InlineCreateForm
-                    placeholder="Tag name..."
+                    placeholder="Nome da tag..."
                     onConfirm={handleCreateTag}
                     onCancel={() => setShowCreateTag(false)}
                   />
@@ -549,7 +549,7 @@ export default function Sidebar({ onCreateFolder, onDeleteFolder, onCreateTag, o
                   ))}
                   {tags.length === 0 && !showCreateTag && (
                     <p style={{ fontSize: 12, color: 'var(--text-secondary)', fontStyle: 'italic' }}>
-                      No tags yet
+                      Nenhuma tag ainda
                     </p>
                   )}
                 </div>
@@ -637,7 +637,7 @@ export default function Sidebar({ onCreateFolder, onDeleteFolder, onCreateTag, o
               }}
             >
               <Settings size={14} />
-              Config
+              Ajustes
             </button>
             <button
               onClick={() => { if (window.confirm('Sair da sua conta?')) logout(); }}

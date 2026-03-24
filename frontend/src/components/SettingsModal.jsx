@@ -58,7 +58,7 @@ function CodeBlock({ method, path, desc, baseUrl }) {
         </code>
         <button
           onClick={copy}
-          title="Copy URL"
+          title="Copiar URL"
           style={{
             background: 'none',
             color: copied ? '#6bcb77' : 'var(--text-secondary)',
@@ -162,7 +162,7 @@ const res = await fetch('${apiBase}/api/notes', {
 const newNote = await res.json();`;
 
   const tabs = [
-    { id: 'api', label: 'API Access', icon: <Globe size={14} /> },
+    { id: 'api', label: 'Acesso API', icon: <Globe size={14} /> },
     { id: 'code', label: 'Exemplos', icon: <Code2 size={14} /> },
     { id: 'about', label: 'Sobre', icon: <BookOpen size={14} /> },
   ];
@@ -456,8 +456,7 @@ curl "${apiBase}/api/notes/1/export?format=xml" -o nota.xml`}
                 { label: 'Backend', value: 'Node.js + Express' },
                 { label: 'Banco de dados', value: 'SQLite via better-sqlite3' },
                 { label: 'PWA', value: 'Workbox (vite-plugin-pwa)' },
-                { label: 'API porta', value: '3001' },
-                { label: 'Frontend porta', value: '5173' },
+                { label: 'Porta', value: '5173' },
               ].map(({ label, value }) => (
                 <div
                   key={label}
