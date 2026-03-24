@@ -12,8 +12,21 @@ import { requireAuth } from './middleware/auth.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+import net from 'net';
+
 const app = express();
-const PORT = 5173;
+const PREFERRED_PORT = Number(process.env.PORT) || 5173;
+
+function findFreePort(startPort) {
+  return new Promise((resolve) => {
+    const server = net.createServer();
+    server.listen(startPort, () => {
+      const { port } = server.address();
+      server.close(() => resolve(port));
+    });
+    server.on('error', () => resolve(findFreePort(startPort + 1)));
+  });
+}
 
 app.use(cors({ origin: '*' }));
 app.use(express.json());
@@ -41,6 +54,8 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Internal server error' });
 });
 
-app.listen(PORT, () => {
-  console.log(`NovaNotes backend running on http://localhost:${PORT}`);
+findFreePort(PREFERRED_PORT).then((port) => {
+  app.listen(port, () => {
+    console.log(`NovaNotes rodando em http://localhost:${port}`);
+  });
 });
