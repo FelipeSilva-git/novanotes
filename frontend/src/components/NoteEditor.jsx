@@ -117,7 +117,7 @@ export default function NoteEditor({ onNoteUpdated, onNoteDeleted, onCreateTag, 
       setTitle('');
       setFolderId(null);
       setSelectedTags([]);
-      editor?.commands.setContent('');
+      editor?.commands.setContent('', false);
       return;
     }
 
@@ -126,12 +126,17 @@ export default function NoteEditor({ onNoteUpdated, onNoteDeleted, onCreateTag, 
 
     getNote(selectedNoteId)
       .then((data) => {
-        if (cancelled) return;
+        if (cancelled || !editor) return;
         setNote(data);
         setTitle(data.title || '');
         setFolderId(data.folder_id || null);
         setSelectedTags(data.tags || []);
-        editor?.commands.setContent(data.content || '');
+        // Use setTimeout to avoid DOM conflicts with React render cycle
+        setTimeout(() => {
+          if (!cancelled && editor && !editor.isDestroyed) {
+            editor.commands.setContent(data.content || '', false);
+          }
+        }, 0);
         setSaveStatus('');
       })
       .catch(console.error)
