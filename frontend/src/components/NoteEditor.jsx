@@ -220,87 +220,9 @@ export default function NoteEditor({ onNoteUpdated, onNoteDeleted, onCreateTag, 
     setLinkUrl('');
   };
 
-  if (!selectedNoteId) {
-    return (
-      <div
-        style={{
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 20,
-          background: 'var(--bg-primary)',
-          color: 'var(--text-secondary)',
-        }}
-      >
-        <div
-          style={{
-            width: 72,
-            height: 72,
-            borderRadius: 20,
-            background: 'rgba(108,99,255,0.08)',
-            border: '1px solid var(--border)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <FileText size={32} color="var(--accent-primary)" style={{ opacity: 0.6 }} />
-        </div>
-        <div style={{ textAlign: 'center' }}>
-          <p style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 6 }}>
-            Nenhuma nota selecionada
-          </p>
-          <p style={{ fontSize: 13 }}>
-            Selecione uma nota da lista ou pressione{' '}
-            <kbd
-              style={{
-                background: 'rgba(108,99,255,0.15)',
-                border: '1px solid var(--border)',
-                borderRadius: 4,
-                padding: '1px 6px',
-                fontSize: 12,
-                color: 'var(--accent-primary)',
-              }}
-            >
-              Ctrl+N
-            </kbd>{' '}
-            para criar uma nova
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  if (loading) {
-    return (
-      <div
-        style={{
-          flex: 1,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: 'var(--bg-primary)',
-          color: 'var(--text-secondary)',
-          gap: 12,
-        }}
-      >
-        <div
-          style={{
-            width: 24,
-            height: 24,
-            border: '2px solid rgba(108,99,255,0.3)',
-            borderTopColor: 'var(--accent-primary)',
-            borderRadius: '50%',
-            animation: 'spin 0.8s linear infinite',
-          }}
-        />
-        Carregando nota...
-      </div>
-    );
-  }
-
+  const showEmpty = !selectedNoteId;
+  const showLoading = selectedNoteId && loading;
+  const showEditor = selectedNoteId && !loading;
   const words = wordCount(editor?.getHTML());
 
   return (
@@ -315,12 +237,95 @@ export default function NoteEditor({ onNoteUpdated, onNoteDeleted, onCreateTag, 
         position: 'relative',
       }}
     >
+      {/* Empty state overlay */}
+      {showEmpty && (
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 20,
+            background: 'var(--bg-primary)',
+            color: 'var(--text-secondary)',
+            zIndex: 10,
+          }}
+        >
+          <div
+            style={{
+              width: 72,
+              height: 72,
+              borderRadius: 20,
+              background: 'rgba(108,99,255,0.08)',
+              border: '1px solid var(--border)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <FileText size={32} color="var(--accent-primary)" style={{ opacity: 0.6 }} />
+          </div>
+          <div style={{ textAlign: 'center' }}>
+            <p style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 6 }}>
+              Nenhuma nota selecionada
+            </p>
+            <p style={{ fontSize: 13 }}>
+              Selecione uma nota da lista ou pressione{' '}
+              <kbd
+                style={{
+                  background: 'rgba(108,99,255,0.15)',
+                  border: '1px solid var(--border)',
+                  borderRadius: 4,
+                  padding: '1px 6px',
+                  fontSize: 12,
+                  color: 'var(--accent-primary)',
+                }}
+              >
+                Ctrl+N
+              </kbd>{' '}
+              para criar uma nova
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Loading overlay */}
+      {showLoading && (
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'var(--bg-primary)',
+            color: 'var(--text-secondary)',
+            gap: 12,
+            zIndex: 10,
+          }}
+        >
+          <div
+            style={{
+              width: 24,
+              height: 24,
+              border: '2px solid rgba(108,99,255,0.3)',
+              borderTopColor: 'var(--accent-primary)',
+              borderRadius: '50%',
+              animation: 'spin 0.8s linear infinite',
+            }}
+          />
+          Carregando nota...
+        </div>
+      )}
       {/* ── Header ── */}
       <div
         style={{
           padding: '14px 24px 10px',
           borderBottom: '1px solid var(--border)',
           flexShrink: 0,
+          visibility: showEditor ? 'visible' : 'hidden',
         }}
       >
         {/* Title */}
@@ -395,7 +400,7 @@ export default function NoteEditor({ onNoteUpdated, onNoteDeleted, onCreateTag, 
       {/* ── Toolbar ── */}
       <div
         style={{
-          display: 'flex',
+          display: showEditor ? 'flex' : 'none',
           alignItems: 'center',
           gap: 2,
           padding: '6px 16px',
@@ -643,7 +648,7 @@ export default function NoteEditor({ onNoteUpdated, onNoteDeleted, onCreateTag, 
       {/* ── Status bar ── */}
       <div
         style={{
-          display: 'flex',
+          display: showEditor ? 'flex' : 'none',
           alignItems: 'center',
           justifyContent: 'space-between',
           padding: '5px 24px',

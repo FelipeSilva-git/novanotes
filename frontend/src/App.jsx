@@ -154,6 +154,5 @@ export default function App() {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
-  if (!user) return <AuthPage />;
-  return <AuthenticatedApp />;
+  return user ? <AuthenticatedApp key="app" /> : <AuthPage key="auth" />;
 }
