@@ -26,9 +26,10 @@ app.use('/api/notes', requireAuth, notesRouter);
 app.use('/api/folders', requireAuth, foldersRouter);
 app.use('/api/tags', requireAuth, tagsRouter);
 
-// Serve frontend in production
-if (process.env.NODE_ENV === 'production') {
-  const distPath = join(__dirname, '../frontend/dist');
+// Serve frontend static files (when built)
+import { existsSync } from 'fs';
+const distPath = join(__dirname, '../frontend/dist');
+if (existsSync(distPath)) {
   app.use(express.static(distPath));
   app.get('*', (req, res) => {
     res.sendFile(join(distPath, 'index.html'));
