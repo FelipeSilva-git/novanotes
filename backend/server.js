@@ -43,8 +43,11 @@ app.use('/api/tags', requireAuth, tagsRouter);
 import { existsSync } from 'fs';
 const distPath = join(__dirname, '../frontend/dist');
 if (existsSync(distPath)) {
-  app.use(express.static(distPath));
+  app.use(express.static(distPath, { maxAge: '1h', setHeaders: (res, path) => {
+    if (path.endsWith('.html')) res.setHeader('Cache-Control', 'no-cache');
+  }}));
   app.get('*', (req, res) => {
+    res.setHeader('Cache-Control', 'no-cache');
     res.sendFile(join(distPath, 'index.html'));
   });
 }
