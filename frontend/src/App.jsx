@@ -147,6 +147,13 @@ function AuthenticatedApp() {
 
 export default function App() {
   const user = useAppStore((s) => s.user);
+  const theme = useAppStore((s) => s.theme);
+
+  // Apply theme on mount
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+
   if (!user) return <AuthPage />;
   return <AuthenticatedApp />;
 }

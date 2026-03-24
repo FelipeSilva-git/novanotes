@@ -26,6 +26,14 @@ const useAppStore = create((set) => ({
     });
   },
 
+  // ── Theme ─────────────────────────────────────────────────
+  theme: localStorage.getItem('novanotes_theme') || 'dark',
+  setTheme: (theme) => {
+    localStorage.setItem('novanotes_theme', theme);
+    document.documentElement.setAttribute('data-theme', theme);
+    set({ theme });
+  },
+
   // ── State ──────────────────────────────────────────────────
   notes: [],
   folders: [],

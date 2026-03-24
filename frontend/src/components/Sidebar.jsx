@@ -13,6 +13,8 @@ import {
   X,
   LogOut,
   User,
+  Sun,
+  Moon,
 } from 'lucide-react';
 import useAppStore from '../store/appStore.js';
 
@@ -145,6 +147,8 @@ function InlineCreateForm({ placeholder, onConfirm, onCancel, colorOptions = TAG
 export default function Sidebar({ onCreateFolder, onDeleteFolder, onCreateTag, onDeleteTag, onOpenSettings }) {
   const user = useAppStore((s) => s.user);
   const logout = useAppStore((s) => s.logout);
+  const theme = useAppStore((s) => s.theme);
+  const setTheme = useAppStore((s) => s.setTheme);
   const selectedNoteId = useAppStore((s) => s.selectedNoteId);
   const selectedFolderId = useAppStore((s) => s.selectedFolderId);
   const selectedTagId = useAppStore((s) => s.selectedTagId);
@@ -638,6 +642,31 @@ export default function Sidebar({ onCreateFolder, onDeleteFolder, onCreateTag, o
             >
               <Settings size={14} />
               Ajustes
+            </button>
+            <button
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              title={theme === 'dark' ? 'Tema claro' : 'Tema escuro'}
+              style={{
+                background: 'none',
+                color: 'var(--text-secondary)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: 8,
+                padding: '7px 8px',
+                fontSize: 12,
+                transition: 'all 0.15s',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = 'var(--text-primary)';
+                e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = 'var(--text-secondary)';
+                e.currentTarget.style.background = 'none';
+              }}
+            >
+              {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
             </button>
             <button
               onClick={() => { if (window.confirm('Sair da sua conta?')) logout(); }}
