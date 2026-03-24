@@ -10,6 +10,7 @@ import NoteList from './components/NoteList.jsx';
 import NoteEditor from './components/NoteEditor.jsx';
 import SettingsModal from './components/SettingsModal.jsx';
 import AuthPage from './components/AuthPage.jsx';
+import Manual from './components/Manual.jsx';
 
 function AuthenticatedApp() {
   const [showSettings, setShowSettings] = useState(false);
@@ -148,11 +149,20 @@ function AuthenticatedApp() {
 export default function App() {
   const user = useAppStore((s) => s.user);
   const theme = useAppStore((s) => s.theme);
+  const [path, setPath] = useState(window.location.pathname);
 
   // Apply theme on mount
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
+  // Simple client-side routing
+  useEffect(() => {
+    const onPop = () => setPath(window.location.pathname);
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, []);
+
+  if (path === '/manual') return <Manual />;
   return user ? <AuthenticatedApp key="app" /> : <AuthPage key="auth" />;
 }
