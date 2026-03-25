@@ -243,7 +243,7 @@ const sections = [
   },
 ];
 
-export default function Manual() {
+export default function Manual({ onClose }) {
   const [progress, setProgress] = useState(0);
   const [activeSection, setActiveSection] = useState('intro');
   const contentRef = useRef(null);
@@ -332,27 +332,31 @@ export default function Manual() {
           ))}
         </div>
 
-        <div style={{ padding: '12px 20px', borderTop: '1px solid var(--border)' }}>
-          <a
-            href="/"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 6,
-              padding: '8px',
-              borderRadius: 8,
-              background: 'rgba(108,99,255,0.15)',
-              color: 'var(--accent-primary)',
-              fontSize: 13,
-              fontWeight: 600,
-              textDecoration: 'none',
-              transition: 'all 0.15s',
-            }}
-          >
-            Voltar ao NovaNotes
-          </a>
-        </div>
+        {onClose && (
+          <div style={{ padding: '12px 20px', borderTop: '1px solid var(--border)' }}>
+            <button
+              onClick={onClose}
+              style={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 6,
+                padding: '8px',
+                borderRadius: 8,
+                background: 'linear-gradient(135deg, rgba(108,99,255,0.3), rgba(0,212,255,0.2))',
+                border: '1px solid rgba(108,99,255,0.4)',
+                color: 'var(--accent-primary)',
+                fontSize: 13,
+                fontWeight: 600,
+                cursor: 'pointer',
+                transition: 'all 0.15s',
+              }}
+            >
+              Ir para o NovaNotes
+            </button>
+          </div>
+        )}
       </nav>
 
       {/* Content */}

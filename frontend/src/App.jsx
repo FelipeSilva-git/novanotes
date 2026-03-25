@@ -14,6 +14,15 @@ import Manual from './components/Manual.jsx';
 
 function AuthenticatedApp() {
   const [showSettings, setShowSettings] = useState(false);
+  const [showManual, setShowManual] = useState(() => {
+    // Mostrar manual automaticamente na primeira vez
+    const seen = localStorage.getItem('novanotes_manual_seen');
+    if (!seen) {
+      localStorage.setItem('novanotes_manual_seen', '1');
+      return true;
+    }
+    return false;
+  });
   const selectNote = useAppStore((s) => s.selectNote);
   const addNote = useAppStore((s) => s.addNote);
   const removeNote = useAppStore((s) => s.removeNote);
@@ -111,6 +120,10 @@ function AuthenticatedApp() {
     [deleteTag, refetchNotes]
   );
 
+  if (showManual) {
+    return <Manual onClose={() => setShowManual(false)} />;
+  }
+
   return (
     <div
       style={{
@@ -127,6 +140,7 @@ function AuthenticatedApp() {
         onCreateTag={handleCreateTag}
         onDeleteTag={handleDeleteTag}
         onOpenSettings={() => setShowSettings(true)}
+        onOpenManual={() => setShowManual(true)}
       />
 
       <NoteList
@@ -149,20 +163,11 @@ function AuthenticatedApp() {
 export default function App() {
   const user = useAppStore((s) => s.user);
   const theme = useAppStore((s) => s.theme);
-  const [path, setPath] = useState(window.location.pathname);
 
   // Apply theme on mount
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
-  // Simple client-side routing
-  useEffect(() => {
-    const onPop = () => setPath(window.location.pathname);
-    window.addEventListener('popstate', onPop);
-    return () => window.removeEventListener('popstate', onPop);
-  }, []);
-
-  if (path === '/manual') return <Manual />;
   return user ? <AuthenticatedApp key="app" /> : <AuthPage key="auth" />;
 }

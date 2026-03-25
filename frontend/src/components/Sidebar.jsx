@@ -15,6 +15,7 @@ import {
   User,
   Sun,
   Moon,
+  BookOpen,
 } from 'lucide-react';
 import useAppStore from '../store/appStore.js';
 
@@ -144,7 +145,7 @@ function InlineCreateForm({ placeholder, onConfirm, onCancel, colorOptions = TAG
   );
 }
 
-export default function Sidebar({ onCreateFolder, onDeleteFolder, onCreateTag, onDeleteTag, onOpenSettings }) {
+export default function Sidebar({ onCreateFolder, onDeleteFolder, onCreateTag, onDeleteTag, onOpenSettings, onOpenManual }) {
   const user = useAppStore((s) => s.user);
   const logout = useAppStore((s) => s.logout);
   const theme = useAppStore((s) => s.theme);
@@ -667,6 +668,31 @@ export default function Sidebar({ onCreateFolder, onDeleteFolder, onCreateTag, o
               }}
             >
               {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
+            </button>
+            <button
+              onClick={onOpenManual}
+              title="Manual"
+              style={{
+                background: 'none',
+                color: 'var(--text-secondary)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: 8,
+                padding: '7px 8px',
+                fontSize: 12,
+                transition: 'all 0.15s',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = 'var(--text-primary)';
+                e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = 'var(--text-secondary)';
+                e.currentTarget.style.background = 'none';
+              }}
+            >
+              <BookOpen size={14} />
             </button>
             <button
               onClick={() => { if (window.confirm('Sair da sua conta?')) logout(); }}
